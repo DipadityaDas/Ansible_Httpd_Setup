@@ -1,0 +1,45 @@
+---
+- name: Setup Apache Httpd Webserver
+  hosts: webservers
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Install the Httpd and Firewalld packages
+      yum:
+        name:
+          - httpd
+          - firewalld
+        state: present
+
+    - name: Start the Httpd and Firewalld packages
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - httpd
+        - firewalld
+
+    - name: Add rules in Firewall service
+      firewalld:
+        service: http
+        zone: public
+        permanent: true
+        immediate: true
+        state: enabled
+
+    - name: Copy the Content to /var/www/html/index.html file
+      copy:
+        content: "Hello from {{ ansible_host }} .\n"
+        dest: /var/www/html/index.html
+      notify: Reload Httpd Server
+
+  handlers:
+    - name: Reload Httpd Server
+      service:
+        name: httpd
+        state: reloaded
+
+
+...
