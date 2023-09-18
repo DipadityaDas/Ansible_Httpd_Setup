@@ -1,6 +1,7 @@
 ---
 - name: Setup Apache Httpd Webserver
-  hosts: webservers
+ # hosts: webservers
+  hosts: development
   gather_facts: false
   become: true
 
