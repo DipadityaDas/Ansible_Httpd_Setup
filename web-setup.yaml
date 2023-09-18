@@ -29,9 +29,9 @@
         immediate: true
         state: enabled
 
-    - name: Copy the Content to /var/www/html/index.html file
-      copy:
-        content: "Hello from {{ ansible_host }} .\n"
+    - name: Create the HTML Content with dynamic features
+      template:
+        src: index.html.j2
         dest: /var/www/html/index.html
       notify: Reload Httpd Server
 
